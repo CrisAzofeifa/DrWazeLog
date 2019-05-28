@@ -5,7 +5,7 @@ iniciar():-pregunta1().
 
 o(o(SN,SV)) --> sn(SN,_Gen,Num),sv(SV,Num);sn(SN,_Gen,Num); sv(SV, Num); yn(YN), sn(SN,_Gen,Num).
 
- 
+
 sn(sn(DET,N),Gen,Num) --> det(DET,Gen,Num), n(N,Gen,Num); sal(SAL,Num),n(N,Gen,Num); n(N,Gen, Num).
 
 
@@ -52,35 +52,58 @@ lugares(juanvinas).
 lugares(turrialba).
 
 
+%FUNCIONES PARA EL MANEJO DE LISTAS
+
+concatenar([],L,L).
+concatenar([C|R],L,[C|R1]):-  concatenar(R,L,R1).
+
+agregarini(X, L, [X|L]).
+
+eliminarini(L,L1):-
+agregarini(_,L1,L).
+
+juntar([C|R],L,F):- eliminarini(L, L1), concatenar([C|R],L1,F).
+
+sumar(X, Y, Z):-Z is X + Y.
+
+agregar(X, [], [X]).
+agregar(X, [C|R], [C|R1]):-agregar(X, R, R1).
+
+
 %...SERIE DE PREGUNTAS Y RESPUESTAS...
 recibir_mensaje(M):-write('Usuario: '),read(Entrada), atomic_list_concat(M, ' ', Entrada), phrase(o(A),M).
 
 pregunta1():-write('DrWaze: Bienvenido a WazeLog la mejor logica de llegar a su destino. \nPor Favor indiqueme donde se encuentra. \n'),
 			 recibir_mensaje(M), respuesta1(M).
 
-respuesta1(M):-lugares(X), miembro(X,M), pregunta2(X); 
+respuesta1(M):-lugares(X), miembro(X,M), pregunta2(X);
 			   write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta donde se encuentra.\n'), recibir_mensaje(M), respuesta1(M).
 
-pregunta2(O):-write('DrWaze: Muy bien ¬øCual es su destino?\n'),
+pregunta2(O):-write('DrWaze: Muy bien øCual es su destino?\n'),
 			  recibir_mensaje(M), respuesta2(M,O).
 
-respuesta2(M,O):-lugares(X), miembro(X,M), pregunta3(O,X); 
+respuesta2(M,O):-lugares(X), miembro(X,M), avisitar(O,X,[]);
 			     write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta su destino.\n'), recibir_mensaje(M), respuesta2(M,O).
 
-pregunta3(O,D):-write('DrWaze: ¬øTiene algun destino intermedio?\n'),
+pregunta3(O,D):-write('DrWaze: øTiene algun destino intermedio?\n'),
 			    recibir_mensaje(M), respuesta3(O,D,M).
 
-respuesta3(O,D,M):-miembro(si,M),lugares(X),miembro(X,M),respuestaFinal1(O,D,I);
-				   miembro(si,M),lugares(X), not(miembro(X,M)), preguntarI(I), respuestaFinal1(O,D,I);
-				   miembro(no,M), respuestaFinal2(O,D);
-				   write('DrWaze: No puedo entenderle, intente de nuevo.\n'), pregunta3(O,D).
+respuesta3(O,D,M):-miembro(si,M),lugares(X),miembro(X,M),avisitar(O,_,D);
+				   miembro(si,M),lugares(X), not(miembro(X,M)), preguntarI(I), avisitar(O,I,D);
+				   miembro(no,M), imprimir(O,D,[],0);
+                                   write('DrWaze: No puedo entenderle, intente de nuevo.\n'), pregunta3(O,D).
 
-preguntarI(I):-write('DrWaze: ¬øCual es el destino intermedio?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
+preguntarI(I):-write('DrWaze: øCual es el destino intermedio?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
 			  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI(I).
 
-respuestaFinal1(O,D,I):-write('DrWaze: Su ruta seria: '), ruta(O,I),ruta(I,D).
+avisitar(O,I,T):-  agregarini(I,T,K), pregunta3(O,K).
 
-respuestaFinal2(O,D):-write('DrWaze: Su ruta seria: '), ruta(O,D).
+imprimir(O,[C|L],[],0):-  ruta(O,C,R1,T1),imprimir(C,L,R1,T1).
+imprimir(O,[C|L],R,T):- ruta(O,C,R1,T1), sumar(T,T1,T2),juntar(R,R1,R2),imprimir(C,L,R2,T2).
+imprimir(O,[C|_],R,T):-ruta(O,C,R1,T1), sumar(T,T1,T2),juntar(R,R1,R2), writef('su ruta es %w y recorrera: %w km \n',[R2, T2]).
+imprimir(O,[C|_],[],0):-ruta(O,C,R2,T2), writef('su ruta es %w y recorrera: %w km \n',[R2, T2]).
+
+
 
 miembro(X,[X|_]).
 miembro(X,[_|R]):-miembro(X,R).
@@ -148,13 +171,11 @@ atravesar(_).
 
 
 
-ruta(Inicio, Fin) :-
+ruta(Inicio, Fin, Camino,Distancia) :-
 	atravesar(Inicio),
 	rpath([Fin|R], Dist)->
         reverse([Fin|R], Camino),
-        Distancia is round(Dist),
-        writef('Su ruta es %w y recorrer√°: %w km \n',
-	       [Camino, Distancia]);
-	writef('No conozco la ruta de %w a %w\n', [Inicio, Fin]).
+        Distancia is round(Dist);
 
+	writef('No conozco la ruta de %w a %w\n', [Inicio, Fin]).
 
