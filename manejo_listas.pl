@@ -1,4 +1,4 @@
-%FUNCIONES PARA EL MANEJO DE LISTAS
+d%FUNCIONES PARA EL MANEJO DE LISTAS
 
 concatenar([],L,L).
 concatenar([C|R],L,[C|R1]):-  concatenar(R,L,R1).
