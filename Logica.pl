@@ -35,15 +35,15 @@ respuesta3(O,D,M):-miembro(si,M),lugares(X),miembro(X,M),avisitar(O,_,D);
                    write('DrWaze: No puedo entenderle, intente de nuevo.\n'), pregunta3(O,D).
 
 preguntarI2(I,L):-write('DrWaze: ¿Donde se encuentra el '), write(L),write('?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
-			  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI2(I,L).
+			  	  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI2(I,L).
 
 preguntarI(I):-write('DrWaze: ¿Cual es el destino intermedio?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
-			  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI(I).
+			   write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI(I).
 
-avisitar(O,I,T):-  agregarini(I,T,K), pregunta3(O,K).
+avisitar(O,I,T):-agregarini(I,T,K), pregunta3(O,K).
 
-imprimir(O,[C|L],[],0):-  ruta(O,C,R1,T1),imprimir(C,L,R1,T1).
-imprimir(O,[C|L],R,T):- ruta(O,C,R1,T1), sumar(T,T1,T2),juntar(R,R1,R2),imprimir(C,L,R2,T2).
+imprimir(O,[C|L],[],0):-ruta(O,C,R1,T1),imprimir(C,L,R1,T1).
+imprimir(O,[C|L],R,T):-ruta(O,C,R1,T1), sumar(T,T1,T2),juntar(R,R1,R2),imprimir(C,L,R2,T2).
 imprimir(O,[C|_],R,T):-ruta(O,C,R1,T1), sumar(T,T1,T2),juntar(R,R1,R2), writef('su ruta es %w y recorrera: %w km \n',[R2, T2]).
 imprimir(O,[C|_],[],0):-ruta(O,C,R2,T2), writef('su ruta es %w y recorrera: %w km \n',[R2, T2]).
 
