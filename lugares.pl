@@ -1,4 +1,6 @@
 %...DEFINICION DE LOS LUGARES DEL GRAFO...
+:-style_check(-singleton).
+
 lugares(cartago).
 lugares(tresrios).
 lugares(sanjose).
