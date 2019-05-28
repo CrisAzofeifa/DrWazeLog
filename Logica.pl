@@ -10,27 +10,32 @@ iniciar():-pregunta1().
 
 
 %...SERIE DE PREGUNTAS Y RESPUESTAS...
-recibir_mensaje(M):-write('Usuario: '),read(Entrada), atomic_list_concat(M, ' ', Entrada), phrase(o(A),M).
+recibir_mensaje(M):-write('Usuario: '),read(Entrada), atomic_list_concat(M, ' ', Entrada), phrase(o(A),M); 
+					write('DrWaze: No es una oracion valida, intente de nuevo.\n'),recibir_mensaje(M).
 
 pregunta1():-write('DrWaze: Bienvenido a WazeLog la mejor logica de llegar a su destino. \nPor Favor indiqueme donde se encuentra. \n'),
 			 recibir_mensaje(M), respuesta1(M).
 
 respuesta1(M):-lugares(X), miembro(X,M), pregunta2(X);
-			   write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta donde se encuentra.\n'), recibir_mensaje(M), respuesta1(M).
+			   write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta donde se encuentra.\n'), recibir_mensaje(L), respuesta1(L).
 
 pregunta2(O):-write('DrWaze: Muy bien ¿Cual es su destino?\n'),
 			  recibir_mensaje(M), respuesta2(M,O).
 
 respuesta2(M,O):-lugares(X), miembro(X,M), avisitar(O,X,[]);
-			     write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta su destino.\n'), recibir_mensaje(M), respuesta2(M,O).
+			     write('DrWaze: No puedo entenderle, por favor indiqueme de manera correcta su destino.\n'), recibir_mensaje(L), respuesta2(L,O).
 
 pregunta3(O,D):-write('DrWaze: ¿Tiene algun destino intermedio?\n'),
 			    recibir_mensaje(M), respuesta3(O,D,M).
 
 respuesta3(O,D,M):-miembro(si,M),lugares(X),miembro(X,M),avisitar(O,_,D);
+				   intermedio(L),miembro(L,M),preguntarI2(I,L), avisitar(O,I,D);
 				   miembro(si,M),lugares(X), not(miembro(X,M)), preguntarI(I), avisitar(O,I,D);
 				   miembro(no,M), imprimir(O,D,[],0);
-                                   write('DrWaze: No puedo entenderle, intente de nuevo.\n'), pregunta3(O,D).
+                   write('DrWaze: No puedo entenderle, intente de nuevo.\n'), pregunta3(O,D).
+
+preguntarI2(I,L):-write('DrWaze: ¿Donde se encuentra el '), write(L),write('?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
+			  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI2(I,L).
 
 preguntarI(I):-write('DrWaze: ¿Cual es el destino intermedio?\n'), recibir_mensaje(M), lugares(I), miembro(I,M);
 			  write('DrWaze: No puedo entenderle, intente de nuevo.\n'), preguntarI(I).

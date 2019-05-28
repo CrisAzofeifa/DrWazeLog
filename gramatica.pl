@@ -42,5 +42,5 @@ vt(vt(voy),sg) --> [voy].
 vt(vt(vamos),pl) --> [vamos].
 
 %Definición de los sustantivos válidos para las oraciones.
-n(n(X),m,sg) --> [X], {member(X,[DrWaze, Waze, DrWazeLog])}.
+n(n(X),m,sg) --> [X], {member(X,[DrWaze, Waze, DrWazeLog, supermercado, colegio, hospital])}.
 n(n(X),m,sg) --> [X], {lugares(X)}.

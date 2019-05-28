@@ -13,3 +13,7 @@ lugares(cachi).
 lugares(orosi).
 lugares(juanvinas).
 lugares(turrialba).
+
+intermedio(supermercado).
+intermedio(hospital).
+intermedio(colegio).
