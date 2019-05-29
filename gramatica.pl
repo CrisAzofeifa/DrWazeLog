@@ -30,9 +30,9 @@ sv(sv(V),Num) --> v(V,Num).
 
 
 %Definición de los determinantes válidos para las oraciones.
-det(det(X),f,sg) --> [X], {member(X,[la,una,para,en])}.
+det(det(X),f,sg) --> [X], {member(X,[la,una,para,en,a])}.
 det(det(X),f,pl) --> [X], {member(X,[las,unas])}.
-det(det(X),m,sg) --> [X], {member(X,[el,un,en,para])}.
+det(det(X),m,sg) --> [X], {member(X,[el,un,en,para,a])}.
 det(det(X),m,pl) --> [X], {member(X,[los,unos])}.
 
 %Definición de saludos válidos para las oraciones.
@@ -42,10 +42,10 @@ sal(sal(X), sg) --> [X] ,{member(X,[hola,buenosdias])}.
 yn(yn(X)) --> [X] ,{member(X,[si,no])}.
 
 %Definición de los verbos válidos para las oraciones junto, además se indica si son singulares o plurales.
-v(v(estoy),sg) --> [estoy].
+v(v(X),sg) --> [X], {member(X,[estoy,voy,hacia,dirijo])}.
 v(v(voy),sg) --> [voy].
-v(v(vamos),pl) --> [vamos].
+v(v(X),pl) --> [X], {member(X,[estamos,vamos,dirijimos])}.
 
 %Definición de los sustantivos válidos para las oraciones.
-n(n(X),m,sg) --> [X], {member(X,[DrWaze, Waze, DrWazeLog, supermercado, colegio, hospital])}.
+n(n(X),m,sg) --> [X], {member(X,[DrWaze, Waze, DrWazeLog, supermercado, colegio, hospital, me])}.
 n(n(X),m,sg) --> [X], {lugares(X)}.
