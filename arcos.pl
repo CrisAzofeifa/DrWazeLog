@@ -1,10 +1,3 @@
-:-style_check(-singleton).
-
-%Definició de los arcos para el grafo.
-%arco(I,F,P).
-%I equivale al inicio del arco y F es donde termina, podemos ir de I a F
-%P es el costo que tiene ir de I a F
-
 arco(sanjose, cartago, 20).
 arco(sanjose,corralillo,22).
 arco(cartago,paraiso,10).
